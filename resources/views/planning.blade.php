@@ -15,6 +15,10 @@
 </head>
 <body>
 
+    <script>
+        const IS_LOGGED_IN = {{ Auth::check() ? 'true' : 'false' }};
+    </script>
+
     <section class="pt-24 w-full">
         <div class="container mx-auto flex flex-col lg:flex-row justify-center items-start gap-8 min-h-screen">
             <!-- FORM -->
@@ -162,6 +166,11 @@
     function validateForm() {
         const dep = new Date(document.getElementById('departure_date').value);
         const ret = new Date(document.getElementById('return_date').value);
+
+        if (!IS_LOGGED_IN) {
+            alert("Harap login terlebih dahulu.");
+            return false;
+        }
 
         if (ret < dep) {
             alert("Tanggal kembali harus setelah atau sama dengan tanggal pergi.");

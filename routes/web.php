@@ -110,8 +110,8 @@ use App\Http\Controllers\LogoutController;
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
 use App\Http\Controllers\PlanningController;
+Route::get('/planning', [PlanningController::class, 'index'])->name('planning');
 Route::middleware('auth')->group(function () {
-    Route::get('/planning', [PlanningController::class, 'index'])->name('planning');
     Route::post('/planning', [PlanningController::class, 'store']);
     Route::delete('/planning/{id}', [PlanningController::class, 'delete']);
 });

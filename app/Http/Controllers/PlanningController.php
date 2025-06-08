@@ -10,11 +10,10 @@ class PlanningController extends Controller
 {
     public function index()
     {
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Harap login terlebih dahulu.');
-        }
+        $plans = Auth::check()
+            ? Planning::where('user_id', Auth::id())->orderByDesc('timestamp')->get()
+            : collect(); // jika belum login, kirim koleksi kosong
 
-        $plans = Planning::where('user_id', Auth::id())->orderByDesc('timestamp')->get();
         return view('planning', compact('plans'));
     }
 
