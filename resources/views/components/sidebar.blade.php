@@ -66,7 +66,7 @@
         </div>
 
         <div class="absolute bottom-0 w-full p-7 border-t border-gray-200 bg-white">
-            <form method="POST" action="{{ url('prosesLogout') }}">
+            <form method="POST" action="{{ url('/logout') }}">
                 @csrf
                 <button type="submit" name="logout" class="text-base text-dark hover:text-primary w-full">Logout</button>
             </form>

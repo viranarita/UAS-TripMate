@@ -10,16 +10,12 @@ Route::get('/destination', function () {
     return view('destination');
 });
 
-Route::get('/planning', function () {
-    return view('planning');
-});
-
 use App\Http\Controllers\LoginController;
 Route::middleware('guest')->group(function () {
     Route::get('/register', function () {
         return view('register');
     });
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login.form');
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 });
 
@@ -112,3 +108,10 @@ Route::delete('/users/{id}', [UsersController::class, 'destroy'])->name('users.d
 
 use App\Http\Controllers\LogoutController;
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+
+use App\Http\Controllers\PlanningController;
+Route::middleware('auth')->group(function () {
+    Route::get('/planning', [PlanningController::class, 'index'])->name('planning');
+    Route::post('/planning', [PlanningController::class, 'store']);
+    Route::delete('/planning/{id}', [PlanningController::class, 'delete']);
+});

@@ -20,7 +20,8 @@
             <!-- FORM -->
             <div class="w-full lg:w-1/2 p-8 bg-white rounded-2xl shadow-xl">
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Plan Your Trip</h2>
-                <form method="POST" action="">
+                <form method="POST" action="{{ url('/planning') }}" onsubmit="return validateForm()">
+                    @csrf
                     <input type="hidden" name="list_id" id="list_id">
                     <div class="grid grid-cols-1 gap-8">
                         <div>
@@ -85,18 +86,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Data dummy, ganti pakai Blade jika perlu -->
-                        <tr class="text-center hover:bg-gray-100 cursor-pointer" onclick='editData({list_id:1,list_name:"Contoh Trip",departure_date:"2025-06-01",return_date:"2025-06-03",departure_city:"Jakarta",destination_city:"Yogyakarta"})'>
-                            <td class="p-2 border">Contoh Trip</td>
-                            <td class="p-2 border">2025-06-01</td>
-                            <td class="p-2 border">2025-06-03</td>
-                            <td class="p-2 border">2</td>
-                            <td class="p-2 border">Jakarta</td>
-                            <td class="p-2 border">Yogyakarta</td>
+                        @foreach ($plans as $plan)
+                        <tr class="text-center hover:bg-gray-100 cursor-pointer" onclick='editData(@json($plan))'>
+                            <td class="p-2 border">{{ $plan->list_name }}</td>
+                            <td class="p-2 border">{{ $plan->departure_date }}</td>
+                            <td class="p-2 border">{{ $plan->return_date }}</td>
+                            <td class="p-2 border">{{ (new \Carbon\Carbon($plan->departure_date))->diffInDays(new \Carbon\Carbon($plan->return_date)) }}</td>
+                            <td class="p-2 border">{{ $plan->departure_city }}</td>
+                            <td class="p-2 border">{{ $plan->destination_city }}</td>
                             <td class="p-2 border">
-                                <a href="#" class="bg-yellow-500 text-white px-2 py-1 rounded">Hapus</a>
+                                <form method="POST" action="{{ url('/planning/' . $plan->list_id) }}" onsubmit="return confirm('Hapus itinerary ini?')" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
+                                </form>
                             </td>
                         </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -136,13 +142,35 @@
     function calculateDays() {
         const dep = new Date(document.getElementById('departure_date').value);
         const ret = new Date(document.getElementById('return_date').value);
-        if (!isNaN(dep) && !isNaN(ret) && ret >= dep) {
-            const diffDays = Math.ceil((ret - dep) / (1000 * 60 * 60 * 24));
-            document.getElementById('trip_days').value = diffDays;
+        const tripDaysInput = document.getElementById('trip_days');
+
+        if (!isNaN(dep) && !isNaN(ret)) {
+            if (ret >= dep) {
+                const diffDays = Math.ceil((ret - dep) / (1000 * 60 * 60 * 24));
+                tripDaysInput.value = diffDays;
+                tripDaysInput.classList.remove("border-red-500");
+            } else {
+                tripDaysInput.value = "";
+                tripDaysInput.classList.add("border-red-500");
+                alert("Tanggal kembali harus lebih besar dari tanggal pergi.");
+            }
         } else {
-            document.getElementById('trip_days').value = '';
+            tripDaysInput.value = "";
+            tripDaysInput.classList.remove("border-red-500");
         }
     }
+    function validateForm() {
+        const dep = new Date(document.getElementById('departure_date').value);
+        const ret = new Date(document.getElementById('return_date').value);
+
+        if (ret < dep) {
+            alert("Tanggal kembali harus setelah atau sama dengan tanggal pergi.");
+            return false;
+        }
+
+        return true;
+    }
+
     </script>
 
 </body>
