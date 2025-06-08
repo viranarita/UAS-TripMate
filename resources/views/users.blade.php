@@ -30,7 +30,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            
+                            @foreach($users as $user)
+                            <tr class="text-center">
+                                <td class="p-2 border">{{ $user->user_id }}</td>
+                                <td class="p-2 border">{{ $user->name }}</td>
+                                <td class="p-2 border">{{ $user->email }}</td>
+                                <td class="p-2 border">
+                                    <form action="{{ route('users.destroy', $user->user_id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus user ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded">Hapus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

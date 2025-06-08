@@ -115,3 +115,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/planning', [PlanningController::class, 'store']);
     Route::delete('/planning/{id}', [PlanningController::class, 'delete']);
 });
+
+Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+Route::delete('/users/{id}', [UsersController::class, 'destroy'])->name('users.destroy');
