@@ -11,6 +11,7 @@ class LoginController extends Controller
     {
         return view('login');
     }
+
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -20,6 +21,11 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            // Cek apakah user adalah admin
+            if (Auth::user()->email === 'admin@admin.com') {
+                return redirect()->intended('/dashboard');
+            }
 
             return redirect()->intended('/');
         }
