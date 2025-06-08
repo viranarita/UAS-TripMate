@@ -20,13 +20,13 @@ Route::middleware('guest')->group(function () {
 });
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
-
-// Route::get('/users', function () {
-//     return view('users');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
 // });
+
+// // Route::get('/users', function () {
+// //     return view('users');
+// // });
 
 Route::get('/attraction', function () {
     return view('attraction');
@@ -116,5 +116,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/planning/{id}', [PlanningController::class, 'delete']);
 });
 
-Route::get('/users', [UsersController::class, 'index'])->name('users.index');
-Route::delete('/users/{id}', [UsersController::class, 'destroy'])->name('users.destroy');
+use App\Http\Controllers\DashboardController;
+Route::get('/dashboard', [DashboardController::class, 'index']);
+
+Route::get('/chart-data', [DashboardController::class, 'getChartData']);

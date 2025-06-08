@@ -57,25 +57,25 @@
         <div class="flex justify-center mt-4 space-x-4">
             <div class="bg-white rounded-lg border border-gray-100 p-6 shadow-md">
                 <div class="flex justify-center">
-                    <div class="text-4xl font-semibold p-2"></div>
+                    <div class="text-4xl font-semibold p-2">{{ $totalUsers }}</div>
                     <div class="text-sm font-medium text-gray-400 print:text-black p-2 mt-3">Total Pengguna Aktif</div>
                 </div>
             </div>
             <div class="bg-white rounded-lg border border-gray-100 p-6 shadow-md">
                 <div class="flex justify-center">
-                    <div class="text-4xl font-semibold p-2"></div>
+                    <div class="text-4xl font-semibold p-2">{{ $totalItinerary }}</div>
                     <div class="text-sm font-medium text-gray-400 print:text-black p-2 mt-3">Total Itinerary Dibuat</div>
                 </div>
             </div>
             <div class="bg-white rounded-lg border border-gray-100 p-6 shadow-md">
                 <div class="flex justify-center">
-                    <div class="text-4xl font-semibold p-2"></div>
+                    <div class="text-4xl font-semibold p-2">{{ $totalTransport }}</div>
                     <div class="text-sm font-medium text-gray-400 print:text-black p-2 mt-3">Total Transportasi</div>
                 </div>
             </div>
             <div class="bg-white rounded-lg border border-gray-100 p-6 shadow-md">
                 <div class="flex justify-center">
-                    <div class="text-4xl font-semibold p-2"></div>
+                    <div class="text-4xl font-semibold p-2">{{ $totalDestination }}</div>
                     <div class="text-sm font-medium text-gray-400 print:text-black p-2 mt-3">Total Destinasi</div>
                 </div>
             </div>
@@ -110,13 +110,26 @@
                 <h2 class="mb-2 font-semibold text-lg">Itinerary Orang-Orang</h2>
                 <table class="w-full border-collapse">
                     <thead>
-                        <tr class="bg-primary text-white">
-                            <th class="p-2 border">Nama Itinerary</th>
-                            <th class="p-2 border">Start Date</th>
-                            <th class="p-2 border">End Date</th>
-                            <th class="p-2 border">Status</th>
-                            <th class="p-2 border">User ID</th>
-                        </tr>
+                        @php $today = now()->format('Y-m-d'); @endphp
+                        @foreach($itineraries as $item)
+                            @php
+                                $status = '';
+                                if ($item->departure_date > $today) {
+                                    $status = '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-600">Pending</span>';
+                                } elseif ($item->return_date < $today) {
+                                    $status = '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">Done</span>';
+                                } else {
+                                    $status = '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-500">Proses</span>';
+                                }
+                            @endphp
+                            <tr class='text-center'>
+                                <td class='p-2 border'>{{ $item->list_name }}</td>
+                                <td class='p-2 border'>{{ $item->departure_date }}</td>
+                                <td class='p-2 border'>{{ $item->return_date }}</td>
+                                <td class='p-2 border'>{!! $status !!}</td>
+                                <td class='p-2 border'>{{ $item->user_id }}</td>
+                            </tr>
+                        @endforeach
                     </thead>
                     <tbody>
                         
@@ -133,75 +146,77 @@
         </div>
     </body>
 
-<script>
-  // Chart 1 Destinasi Favorit
-  document.addEventListener("DOMContentLoaded", function() {
-        fetch("getChartData.php")
-            .then(response => response.json())
-            .then(data => {
-                var ctx = document.getElementById("myChart").getContext('2d');
-
-                var myChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: data.labels,
-                        datasets: [{
-                            label: 'Destinasi Favorit',
-                            data: data.data,
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.7)',
-                                'rgba(54, 162, 235, 0.7)',
-                                'rgba(255, 206, 86, 0.7)',
-                                'rgba(75, 192, 192, 0.7)',
-                                'rgba(153, 102, 255, 0.7)'
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)'
-                            ],
-                            borderWidth: 2
-                        }]
-                    }
-                });
-            })
-            .catch(error => console.error('Error:', error));
-    });
-
-  // Chart 2 Itinerary Perbulan
-  const monthLabels = 
-  const monthData = 
-
-  document.addEventListener("DOMContentLoaded", function () {
-    const ctx = document.getElementById("myChart2").getContext("2d");
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: monthLabels,
-        datasets: [{
-          label: 'Jumlah Itinerary',
-          data: monthData,
-          backgroundColor: 'rgba(54, 162, 235, 0.7)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 2
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              stepSize: 1
+    <script>
+        
+        // Chart 1 Destinasi Favorit
+        document.addEventListener("DOMContentLoaded", function() {
+              fetch("/chart-data")
+                  .then(response => response.json())
+                  .then(data => {
+                      var ctx = document.getElementById("myChart").getContext('2d');
+      
+                      var myChart = new Chart(ctx, {
+                          type: 'doughnut',
+                          data: {
+                              labels: data.labels,
+                              datasets: [{
+                                  label: 'Destinasi Favorit',
+                                  data: data.data,
+                                  backgroundColor: [
+                                      'rgba(255, 99, 132, 0.7)',
+                                      'rgba(54, 162, 235, 0.7)',
+                                      'rgba(255, 206, 86, 0.7)',
+                                      'rgba(75, 192, 192, 0.7)',
+                                      'rgba(153, 102, 255, 0.7)'
+                                  ],
+                                  borderColor: [
+                                      'rgba(255, 99, 132, 1)',
+                                      'rgba(54, 162, 235, 1)',
+                                      'rgba(255, 206, 86, 1)',
+                                      'rgba(75, 192, 192, 1)',
+                                      'rgba(153, 102, 255, 1)'
+                                  ],
+                                  borderWidth: 2
+                              }]
+                          }
+                      });
+                  })
+                  .catch(error => console.error('Error:', error));
+          });
+      
+        // Chart 2 Itinerary Perbulan
+        document.addEventListener("DOMContentLoaded", function () {
+          const monthLabels = {!! json_encode($monthLabels) !!};
+          const monthData = {!! json_encode($monthData) !!};
+      
+          const ctx = document.getElementById("myChart2").getContext("2d");
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: monthLabels,
+              datasets: [{
+                label: 'Jumlah Itinerary',
+                data: monthData,
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2
+              }]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    stepSize: 1
+                  }
+                }
+              }
             }
-          }
-        }
-      }
-    });
-  });
-</script>
+          });
+        });
+      </script>
+      
 
 
 </html>
