@@ -14,21 +14,23 @@ Route::get('/planning', function () {
     return view('planning');
 });
 
-Route::get('/login', function () {
-    return view('login');
+use App\Http\Controllers\LoginController;
+Route::middleware('guest')->group(function () {
+    Route::get('/register', function () {
+        return view('register');
+    });
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login.form');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 });
 
-Route::get('/register', function () {
-    return view('register');
-});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
-Route::get('/users', function () {
-    return view('users');
-});
+// Route::get('/users', function () {
+//     return view('users');
+// });
 
 Route::get('/attraction', function () {
     return view('attraction');
@@ -102,3 +104,11 @@ Route::post('/trains', [TrainsController::class, 'store'])->name('trains.store')
 Route::put('/trains/{id}', [TrainsController::class, 'update'])->name('trains.update');
 Route::delete('/trains/{id}', [TrainsController::class, 'destroy'])->name('trains.destroy');
 
+use App\Http\Controllers\UsersController;
+Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+Route::post('/users', [UsersController::class, 'store'])->name('users.store');
+Route::put('/users/{id}', [UsersController::class, 'update'])->name('users.update');
+Route::delete('/users/{id}', [UsersController::class, 'destroy'])->name('users.destroy');
+
+use App\Http\Controllers\LogoutController;
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
