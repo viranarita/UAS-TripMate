@@ -41,7 +41,7 @@
           <input type="checkbox" id="showPassword" class="mr-2" />
           <label for="showPassword" class="text-sm text-gray-700">Tampilkan Password</label>
         </div>
-        <a href="#" class="text-sm text-red-600 hover:underline font-medium">Lupa Password?</a>
+        <a href="/lupa-password" class="text-sm text-red-600 hover:underline font-medium">Lupa Password?</a>
       </div>
 
       <button type="submit"

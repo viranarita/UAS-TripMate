@@ -120,3 +120,11 @@ use App\Http\Controllers\DashboardController;
 Route::get('/dashboard', [DashboardController::class, 'index']);
 
 Route::get('/chart-data', [DashboardController::class, 'getChartData']);
+
+use App\Http\Controllers\LupaPasswordController;
+Route::get('/lupa-password', [LupaPasswordController::class, 'showForm'])->name('password.request');
+Route::post('/lupa-password', [LupaPasswordController::class, 'handleRequest'])->name('password.email');
+
+use App\Http\Controllers\ResetPasswordController;
+Route::get('/reset-password', [ResetPasswordController::class, 'showForm'])->name('password.reset');
+Route::post('/reset-password', [ResetPasswordController::class, 'handleReset'])->name('password.update');
