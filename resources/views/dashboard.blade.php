@@ -90,12 +90,12 @@
                 <div class="bg-white p-6 rounded-lg shadow-lg w-full md:w-1/2 max-w-md text-center">
                     <h2 class="text-lg font-semibold text-gray-800 mb-4">Destinasi Terfavorit</h2>
                     <div class="w-full h-80 mx-auto">
-                        <canvas id="myChart"></canvas>
+                        <canvas id="myChart1"></canvas>
                     </div>
                 </div>
                 <!-- Chart 2 -->
                 <div class="bg-white p-6 rounded-lg shadow-lg w-full md:w-1/2 max-w-md text-center">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Jumlah Itinerary Dibuat Perbulan </h2>
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Distribusi Itinerary Bulanan </h2>
                     <div class="w-full h-80 mx-auto">
                         <canvas id="myChart2"></canvas>
                     </div>
@@ -110,6 +110,15 @@
                 <h2 class="mb-2 font-semibold text-lg">Itinerary Orang-Orang</h2>
                 <table class="w-full border-collapse">
                     <thead>
+                        <tr class="bg-primary text-white">
+                            <th class="p-2 border">Nama Itinerary</th>
+                            <th class="p-2 border">Start Date</th>
+                            <th class="p-2 border">End Date</th>
+                            <th class="p-2 border">Status</th>
+                            <th class="p-2 border">Nama User</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         @php $today = now()->format('Y-m-d'); @endphp
                         @foreach($itineraries as $item)
                             @php
@@ -127,13 +136,10 @@
                                 <td class='p-2 border'>{{ $item->departure_date }}</td>
                                 <td class='p-2 border'>{{ $item->return_date }}</td>
                                 <td class='p-2 border'>{!! $status !!}</td>
-                                <td class='p-2 border'>{{ $item->user_id }}</td>
+                                <td class='p-2 border'>{{ $item->user_name }}</td>
                             </tr>
                         @endforeach
-                    </thead>
-                    <tbody>
-                        
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -147,13 +153,12 @@
     </body>
 
     <script>
-        
         // Chart 1 Destinasi Favorit
         document.addEventListener("DOMContentLoaded", function() {
               fetch("/chart-data")
                   .then(response => response.json())
                   .then(data => {
-                      var ctx = document.getElementById("myChart").getContext('2d');
+                      var ctx = document.getElementById("myChart1").getContext('2d');
       
                       var myChart = new Chart(ctx, {
                           type: 'doughnut',
@@ -195,7 +200,7 @@
             data: {
               labels: monthLabels,
               datasets: [{
-                label: 'Jumlah Itinerary',
+                label: monthLabels,
                 data: monthData,
                 backgroundColor: 'rgba(54, 162, 235, 0.7)',
                 borderColor: 'rgba(54, 162, 235, 1)',

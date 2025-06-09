@@ -23,9 +23,9 @@ class DashboardController extends Controller
 
         $monthlyItinerary = DB::table('tb_Itinerary')
             ->selectRaw("DATE_FORMAT(timestamp, '%Y-%m') as month, COUNT(*) as total")
-            ->whereNotNull('timestamp')
+            ->whereNotNull('departure_date')
             ->groupByRaw("DATE_FORMAT(timestamp, '%Y-%m')")
-            ->orderByRaw("MIN(timestamp)")
+            ->orderByRaw("MIN(departure_date)")
             ->get();
 
         // Format month label from '2025-06' to 'June 2025'
@@ -36,6 +36,8 @@ class DashboardController extends Controller
         $monthData = $monthlyItinerary->pluck('total');
 
         $itineraries = DB::table('tb_Itinerary')
+            ->join('tb_Users', 'tb_Itinerary.user_id', '=', 'tb_Users.user_id')
+            ->select('tb_Itinerary.*', 'tb_Users.name as user_name')
             ->orderByDesc('departure_date')
             ->get();
 

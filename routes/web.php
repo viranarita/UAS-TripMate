@@ -28,33 +28,33 @@ Route::middleware('guest')->group(function () {
 // //     return view('users');
 // // });
 
-Route::get('/attraction', function () {
-    return view('attraction');
-});
+// Route::get('/attraction', function () {
+//     return view('attraction');
+// });
 
-Route::get('/culinary', function () {
-    return view('culinary');
-});
+// Route::get('/culinary', function () {
+//     return view('culinary');
+// });
 
-Route::get('/hotel', function () {
-    return view('hotel');
-});
+// Route::get('/hotel', function () {
+//     return view('hotel');
+// });
 
-Route::get('/buses', function () {
-    return view('buses');
-});
+// Route::get('/buses', function () {
+//     return view('buses');
+// });
 
-Route::get('/flights', function () {
-    return view('flights');
-});
+// Route::get('/flights', function () {
+//     return view('flights');
+// });
 
-Route::get('/trains', function () {
-    return view('trains');
-});
+// Route::get('/trains', function () {
+//     return view('trains');
+// });
 
-Route::get('/packages', function () {
-    return view('packages');
-});
+// Route::get('/packages', function () {
+//     return view('packages');
+// });
 
 use App\Http\Controllers\AttractionController;
 Route::get('/attraction', [AttractionController::class, 'index']);
