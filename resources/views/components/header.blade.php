@@ -1,7 +1,7 @@
 @vite(['resources/css/app.css', 'resources/css/style.css'])
 
 <!-- Header Section Start -->
-<header class="bg-white fixed top-0 left-0 w-full flex items-center z-50">
+<header class="bg-white fixed top-0 left-0 w-full flex items-center z-50 border-b border-gray-200 shadow-md">
     <div class="container mx-auto flex justify-between items-center">
         <!-- Logo dan Menu -->
         <div class="px-4 flex items-center space-x-8">
@@ -12,7 +12,7 @@
             <nav class="hidden lg:flex space-x-8">
                 <a href="{{ url('/') }}" class="text-base text-dark hover:text-primary {{ request()->is('/') ? 'text-primary font-semibold' : '' }}">Home</a>
                 <a href="{{ url('/destination') }}" class="text-base text-dark hover:text-primary {{ request()->is('destination') ? 'text-primary font-semibold' : '' }}">Destination</a>
-                <a href="{{ url('/planning') }}" class="text-base text-dark hover:text-primary {{ request()->is('planning') ? 'text-primary font-semibold' : '' }}">Planning</a>
+                <a href="{{ url('/cardplanning') }}" class="text-base text-dark hover:text-primary {{ request()->is('cardplanning') ? 'text-primary font-semibold' : '' }}">Planning</a>
             </nav>
             @endif
         </div>
@@ -49,7 +49,7 @@
             @if (!Auth::check() || (Auth::user() && !Auth::user()->is_admin))
             <li><a href="{{ url('/') }}" class="text-base text-dark hover:text-primary {{ request()->is('/') ? 'text-primary font-semibold' : '' }}">Home</a></li>
             <li><a href="{{ url('/destination') }}" class="text-base text-dark hover:text-primary {{ request()->is('destination') ? 'text-primary font-semibold' : '' }}">Destination</a></li>
-            <li><a href="{{ url('/planning') }}" class="text-base text-dark hover:text-primary {{ request()->is('planning') ? 'text-primary font-semibold' : '' }}">Planning</a></li>
+            <li><a href="{{ url('/cardplanning') }}" class="text-base text-dark hover:text-primary {{ request()->is('planning') ? 'text-primary font-semibold' : '' }}">Planning</a></li>
             @endif
 
             @if (!Auth::check())

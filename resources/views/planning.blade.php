@@ -9,11 +9,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @vite(['resources/css/app.css', 'resources/css/style.css'])
-    <title>TripMate</title>
+    <title>Planning | TripMate</title>
     <link rel="stylesheet" href="style.css"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
+<body class="bg-gray-100">
 
     <script>
         const IS_LOGGED_IN = {{ Auth::check() ? 'true' : 'false' }};
@@ -24,7 +24,7 @@
             <!-- FORM -->
             <div class="w-full lg:w-1/2 p-8 bg-white rounded-2xl shadow-xl">
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Plan Your Trip</h2>
-                <form method="POST" action="{{ url('/planning') }}" onsubmit="return validateForm()">
+                <form method="POST" action="{{ url('/planning') }}" enctype="multipart/form-data" onsubmit="return validateForm()">
                     @csrf
                     <input type="hidden" name="list_id" id="list_id">
                     <div class="grid grid-cols-1 gap-8">
@@ -64,6 +64,14 @@
                                 <option value="Yogyakarta">Yogyakarta</option>
                             </select>
                         </div>
+                        <div>
+                            <label class="block text-gray-700">Gambar</label>
+                            <input type="file" name="image" id="image" accept=".jpg,.jpeg" class="w-full px-3 py-2 border rounded">
+                            <!-- Preview gambar -->
+                            <div id="imagePreview" class="mt-2">
+                                <!-- nanti diisi gambar -->
+                            </div>
+                        </div>
                     </div>
     
                     <div class="mt-4 flex justify-between">
@@ -75,7 +83,7 @@
             </div>
     
             <!-- TABEL -->
-            <div class="w-full lg:w-1/2 bg-white p-4 rounded-2xl shadow-xl overflow-x-auto">
+            {{-- <div class="w-full lg:w-1/2 bg-white p-4 rounded-2xl shadow-xl overflow-x-auto">
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Your Plan</h2>
                 <table class="w-full border-collapse">
                     <thead>
@@ -109,7 +117,7 @@
                         @endforeach
                     </tbody>
                 </table>
-            </div>
+            </div> --}}
         </div>
     </section>
     

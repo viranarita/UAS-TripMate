@@ -115,6 +115,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/planning', [PlanningController::class, 'store']);
     Route::delete('/planning/{id}', [PlanningController::class, 'delete']);
 });
+Route::get('/cardplanning', [PlanningController::class, 'cardPlanning'])->name('cardplanning');
+Route::get('/image/planning/{id}', [App\Http\Controllers\PlanningController::class, 'showImage']);
 
 use App\Http\Controllers\DashboardController;
 Route::get('/dashboard', [DashboardController::class, 'index']);
@@ -128,3 +130,4 @@ Route::post('/lupa-password', [LupaPasswordController::class, 'handleRequest'])-
 use App\Http\Controllers\ResetPasswordController;
 Route::get('/reset-password', [ResetPasswordController::class, 'showForm'])->name('password.reset');
 Route::post('/reset-password', [ResetPasswordController::class, 'handleReset'])->name('password.update');
+

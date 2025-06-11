@@ -17,6 +17,7 @@ class Planning extends Model
         'return_date',
         'departure_city',
         'destination_city',
+        'image',
     ];
 
     // Relasi ke user (jika diperlukan)
