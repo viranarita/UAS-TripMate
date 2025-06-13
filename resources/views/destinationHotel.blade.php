@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Destination')
+@section('title', 'Destination - Hotel')
 
 @section('content')
 <!DOCTYPE html>
@@ -16,9 +16,9 @@
 <body>
 
     @include('components.navbardestination')
-tolol anying
+
     @include('components.footer')
-    
+
     <script src="js/script.js"></script>
 
 </body>

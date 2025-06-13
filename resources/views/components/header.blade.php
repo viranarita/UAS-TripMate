@@ -11,7 +11,7 @@
             @if (!Auth::check() || (Auth::user() && !Auth::user()->is_admin))
             <nav class="hidden lg:flex space-x-8">
                 <a href="{{ url('/') }}" class="text-base text-dark hover:text-primary {{ request()->is('/') ? 'text-primary font-semibold' : '' }}">Home</a>
-                <a href="{{ url('/destination') }}" class="text-base text-dark hover:text-primary {{ request()->is('destination') ? 'text-primary font-semibold' : '' }}">Destination</a>
+                <a href="{{ url('/destination-hotel') }}" class="text-base text-dark hover:text-primary {{ request()->is('destination-hotel') ? 'text-primary font-semibold' : '' }}">Destination</a>
                 <a href="{{ url('/cardplanning') }}" class="text-base text-dark hover:text-primary {{ request()->is('cardplanning') ? 'text-primary font-semibold' : '' }}">Planning</a>
             </nav>
             @endif
@@ -48,7 +48,7 @@
         <ul class="block text-left space-y-4 p-5">
             @if (!Auth::check() || (Auth::user() && !Auth::user()->is_admin))
             <li><a href="{{ url('/') }}" class="text-base text-dark hover:text-primary {{ request()->is('/') ? 'text-primary font-semibold' : '' }}">Home</a></li>
-            <li><a href="{{ url('/destination') }}" class="text-base text-dark hover:text-primary {{ request()->is('destination') ? 'text-primary font-semibold' : '' }}">Destination</a></li>
+            <li><a href="{{ url('/destination-hotel') }}" class="text-base text-dark hover:text-primary {{ request()->is('destination-hotel') ? 'text-primary font-semibold' : '' }}">Destination</a></li>
             <li><a href="{{ url('/cardplanning') }}" class="text-base text-dark hover:text-primary {{ request()->is('planning') ? 'text-primary font-semibold' : '' }}">Planning</a></li>
             @endif
 

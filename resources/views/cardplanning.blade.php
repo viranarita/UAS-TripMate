@@ -14,7 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-100">
-    <section id="cardplanning" class="pt-25">
+    <section id="cardplanning" class="pt-25 pb-25">
         <div class="container">
             <div class="flex flex-wrap">
                 <div class="w-full self-center px-4">
@@ -44,6 +44,7 @@
         </div>
     </section>
 
+    @include('components.footer')
     
 </body>
 </html>

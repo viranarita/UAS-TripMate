@@ -131,3 +131,6 @@ use App\Http\Controllers\ResetPasswordController;
 Route::get('/reset-password', [ResetPasswordController::class, 'showForm'])->name('password.reset');
 Route::post('/reset-password', [ResetPasswordController::class, 'handleReset'])->name('password.update');
 
+Route::get('/destination-hotel', function () {
+    return view('destinationHotel');
+});
