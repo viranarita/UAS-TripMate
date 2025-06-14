@@ -19,6 +19,10 @@ class PackagesController extends Controller
             'name' => 'required|string|max:255',
             'details' => 'required|string',
             'price' => 'required|numeric',
+            'city' => 'required|string|max:255',
+            'days' => 'required|integer|min:1',
+            'nights' => 'required|integer|min:0',
+            'departure_date' => 'required|date',
         ]);
 
         $lastPackage = Packages::orderBy('package_id', 'desc')->first();
@@ -37,6 +41,10 @@ class PackagesController extends Controller
             'name' => $request->name,
             'details' => $request->details,
             'price' => $request->price,
+            'city' => $request->city,
+            'days' => $request->days,
+            'nights' => $request->nights,
+            'departure_date' => $request->departure_date,
         ]);
 
         return redirect('/packages')->with('success', 'Packages berhasil ditambahkan.');
@@ -50,12 +58,20 @@ class PackagesController extends Controller
             'name' => 'required|string|max:255',
             'details' => 'required|string',
             'price' => 'required|numeric',
+            'city' => 'required|string|max:255',
+            'days' => 'required|integer|min:1',
+            'nights' => 'required|integer|min:0',
+            'departure_date' => 'required|date',
         ]);
 
         $package->update([
             'name' => $request->name,
             'details' => $request->details,
             'price' => $request->price,
+            'city' => $request->city,
+            'days' => $request->days,
+            'nights' => $request->nights,
+            'departure_date' => $request->departure_date,
         ]);
 
         return redirect('/packages')->with('success', 'Packages berhasil diperbarui.');

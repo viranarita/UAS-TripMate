@@ -16,5 +16,9 @@ class Packages extends Model
         'name',
         'details',
         'price',
+        'city',
+        'days',
+        'nights',
+        'departure_date',
     ];
 }

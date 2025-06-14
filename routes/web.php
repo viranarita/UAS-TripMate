@@ -167,10 +167,11 @@ Route::get('/destination-trains', function () {
     return view('destinationTrains');
 });
 
-// Route::get('/destination-trains', function () {
-//     return view('destinationTrains');
-// });
-
+use App\Http\Controllers\DestinationPackageController;
+Route::post('/destination-package', [DestinationPackageController::class, 'search'])->name('destination-package.search');
 Route::get('/destination-package', function () {
     return view('destinationPackage');
 });
+// Route::get('/destination-package', function () {
+//     return view('destinationPackage');
+// });
