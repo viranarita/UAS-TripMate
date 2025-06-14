@@ -142,9 +142,6 @@ Route::post('/destination-culinary', [DestinationCulinaryController::class, 'sea
 Route::get('/destination-culinary', function () {
     return view('destinationCulinary');
 });
-// Route::get('/destination-culinary', function () {
-//     return view('destinationCulinary');
-// });
 
 use App\Http\Controllers\DestinationHotelsController;
 Route::post('/destination-hotel', [DestinationHotelsController::class, 'search'])->name('destination-hotel.search');
@@ -152,15 +149,28 @@ Route::get('/destination-hotel', function () {
     return view('destinationHotel');
 });
 
+use App\Http\Controllers\DestinationBusesController;
+Route::post('/destination-buses', [DestinationBusesController::class, 'search'])->name('destination-buses.search');
 Route::get('/destination-buses', function () {
     return view('destinationBuses');
 });
+
+use App\Http\Controllers\DestinationFlightController;
+Route::post('/destination-flight', [DestinationFlightController::class, 'search'])->name('destination-flight.search');
 Route::get('/destination-flight', function () {
     return view('destinationFlight');
 });
+
+use App\Http\Controllers\DestinationTrainsController;
+Route::post('/destination-trains', [DestinationTrainsController::class, 'search'])->name('destination-trains.search');
 Route::get('/destination-trains', function () {
     return view('destinationTrains');
 });
+
+// Route::get('/destination-trains', function () {
+//     return view('destinationTrains');
+// });
+
 Route::get('/destination-package', function () {
     return view('destinationPackage');
 });

@@ -44,16 +44,22 @@
             </h2>
         @endif
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 px-4">
             @if(isset($attractions) && $attractions->count())
                 @foreach($attractions as $attraction)
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
                         @if($attraction->image_url)
-                            <img src="data:image/jpeg;base64,{{ base64_encode($attraction->image_url) }}" class="w-full h-48 object-cover" alt="{{ $attraction->name }}">
+                            <div class="w-full h-[200px]">
+                                <img src="data:image/jpeg;base64,{{ base64_encode($attraction->image_url) }}"
+                                    alt="{{ $attraction->name }}"
+                                    class="w-full h-full object-cover"/>
+                            </div>
                         @else
-                            <div class="w-full h-48 bg-gray-300 flex items-center justify-center text-gray-600">No Image</div>
+                            <div class="w-full h-[200px] bg-gray-300 flex items-center justify-center text-gray-600">
+                                No Image
+                            </div>
                         @endif
-                        <div class="p-4">
+                        <div class="p-4 flex-grow">
                             <h3 class="text-lg font-semibold">{{ $attraction->name }}</h3>
                             <p class="text-sm text-gray-500">{{ $attraction->location }}</p>
                             <p class="text-primary font-bold mt-2">Rp{{ number_format($attraction->price, 0, ',', '.') }}</p>

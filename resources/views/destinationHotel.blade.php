@@ -61,18 +61,25 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             @if(isset($hotels) && $hotels->count())
                 @foreach($hotels as $hotel)
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                        @if($hotel->image_url)
-                            <img src="data:image/jpeg;base64,{{ base64_encode($hotel->image_url) }}" class="w-full h-48 object-cover" alt="{{ $hotel->name }}">
-                        @else
-                            <div class="w-full h-48 bg-gray-300 flex items-center justify-center text-gray-600">No Image</div>
-                        @endif
-                        <div class="p-4">
-                            <h3 class="text-lg font-semibold">{{ $hotel->name }}</h3>
-                            <p class="text-sm text-gray-500">{{ $hotel->location }}</p>
-                            <p class="text-primary font-bold mt-2">Rp{{ number_format($hotel->price_per_night, 0, ',', '.') }} / malam</p>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
+                    @if($hotel->image_url)
+                        <div class="w-full h-[200px]">
+                            <img src="data:image/jpeg;base64,{{ base64_encode($hotel->image_url) }}"
+                                alt="{{ $hotel->name }}"
+                                class="w-full h-full object-cover" />
                         </div>
+                    @else
+                        <div class="w-full h-[200px] bg-gray-300 flex items-center justify-center text-gray-600">
+                            No Image
+                        </div>
+                    @endif
+                    <div class="p-4 flex-grow">
+                        <h3 class="text-lg font-semibold">{{ $hotel->name }}</h3>
+                        <p class="text-sm text-gray-500">{{ $hotel->location }}</p>
+                        <p class="text-primary font-bold mt-2">Rp{{ number_format($hotel->price_per_night, 0, ',', '.') }} / malam</p>
                     </div>
+                </div>
+                
                 @endforeach
                 
                 @endif

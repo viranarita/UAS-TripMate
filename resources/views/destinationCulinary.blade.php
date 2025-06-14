@@ -36,36 +36,56 @@
         </div>
     </section>
 
+
     <!-- Hasil Pencarian -->
     <section class="pb-8 w-full lg:w-[calc(100%-16rem)] lg:ml-64">
-        @if(isset($culinaries) && $culinaries->count())
+        @if(isset($culinary) && $culinary->count())
             <h2 class="text-l text-gray-700 mb-4 px-4">
-                <span class="font-semibold">{{ $city }}</span> – {{ $culinaries->count() }} kuliner ditemukan
+                <span class="font-semibold">{{ $city }}</span> – {{ $culinary->count() }} kuliner ditemukan
             </h2>
         @elseif(request()->has('city'))
             <h2 class="text-l text-gray-700 mb-4 px-4">
                 <span class="font-semibold">{{ $city }}</span> – Tidak ada kuliner ditemukan
             </h2>
         @endif
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 px-4">
-            @if(isset($culinaries) && $culinaries->count())
-                @foreach($culinaries as $culinary)
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                        @if($culinary->image_url)
-                            <img src="data:image/jpeg;base64,{{ base64_encode($culinary->image_url) }}" class="w-full h-48 object-cover" alt="{{ $culinary->name }}">
-                        @else
-                            <div class="w-full h-48 bg-gray-300 flex items-center justify-center text-gray-600">No Image</div>
-                        @endif
-                        <div class="p-4">
-                            <h3 class="text-lg font-semibold">{{ $culinary->name }}</h3>
-                            <p class="text-sm text-gray-500">{{ $culinary->location }}</p>
-                            <p class="text-primary font-bold mt-2">{{ $culinary->price_range }}</p>
+            @if(isset($culinary) && $culinary->count())
+                @foreach($culinary as $item)
+                @php
+                    $symbolDisplay = '';
+                    switch(strtolower($item->price_range)) {
+                        case 'murah':
+                            $symbolDisplay = '<span class="text-primary">$</span><span class="text-gray-500">$</span><span class="text-gray-500">$</span>';
+                            break;
+                        case 'sedang':
+                            $symbolDisplay = '<span class="text-primary">$</span><span class="text-primary">$</span><span class="text-gray-500">$</span>';
+                            break;
+                        case 'mahal':
+                            $symbolDisplay = '<span class="text-primary">$</span><span class="text-primary">$</span><span class="text-primary">$</span>';
+                            break;
+                    }
+                @endphp
+                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
+                    @if($item->image_url)
+                        <div class="w-full h-[200px]">
+                            <img src="data:image/jpeg;base64,{{ base64_encode($item->image_url) }}"
+                                alt="{{ $item->name }}"
+                                class="w-full h-full object-cover"/>
                         </div>
+                    @else
+                        <div class="w-full h-[200px] bg-gray-300 flex items-center justify-center text-gray-600">
+                            No Image
+                        </div>
+                    @endif
+                    <div class="p-4 flex-grow">
+                        <h3 class="text-lg font-semibold">{{ $item->name }}</h3>
+                        <p class="text-sm text-gray-500">{{ $item->location }}</p>
+                        <p class="font-bold mt-2">{!! $symbolDisplay !!}</p>
                     </div>
-                @endforeach
+                </div>                
+            @endforeach        
             @endif
-        </div>
+        </div>        
     </section>
 
     @include('components.footer')
