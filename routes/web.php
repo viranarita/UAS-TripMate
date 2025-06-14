@@ -131,6 +131,36 @@ use App\Http\Controllers\ResetPasswordController;
 Route::get('/reset-password', [ResetPasswordController::class, 'showForm'])->name('password.reset');
 Route::post('/reset-password', [ResetPasswordController::class, 'handleReset'])->name('password.update');
 
+use App\Http\Controllers\DestinationAttractionController;
+Route::post('/destination-attraction', [DestinationAttractionController::class, 'search'])->name('destination-attraction.search');
+Route::get('/destination-attraction', function () {
+    return view('destinationAttraction');
+});
+
+use App\Http\Controllers\DestinationCulinaryController;
+Route::post('/destination-culinary', [DestinationCulinaryController::class, 'search'])->name('destination-culinary.search');
+Route::get('/destination-culinary', function () {
+    return view('destinationCulinary');
+});
+// Route::get('/destination-culinary', function () {
+//     return view('destinationCulinary');
+// });
+
+use App\Http\Controllers\DestinationHotelsController;
+Route::post('/destination-hotel', [DestinationHotelsController::class, 'search'])->name('destination-hotel.search');
 Route::get('/destination-hotel', function () {
     return view('destinationHotel');
+});
+
+Route::get('/destination-buses', function () {
+    return view('destinationBuses');
+});
+Route::get('/destination-flight', function () {
+    return view('destinationFlight');
+});
+Route::get('/destination-trains', function () {
+    return view('destinationTrains');
+});
+Route::get('/destination-package', function () {
+    return view('destinationPackage');
 });
