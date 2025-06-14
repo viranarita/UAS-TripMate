@@ -31,14 +31,16 @@
                             </div>
                         </a>
                         @foreach ($plans as $plan)
-                            <div class="rounded-2xl w-[196px] h-[200px] bg-gray-200 overflow-hidden drop-shadow flex flex-col">
-                                <img src="{{ $plan->image ? url('/image/planning/' . $plan->list_id) : asset('img/default.jpg') }}" class="w-full h-1/2 object-cover rounded-b"/>
-                                <div class="p-3 flex flex-col justify-center items-center flex-grow text-center">
-                                    <h1 class="font-semibold text-black">{{ $plan->list_name }}</h1>
+                            <a href="{{ route('planning.show', $plan->list_id) }}" class="block">
+                                <div class="rounded-2xl w-[196px] h-[200px] bg-gray-200 overflow-hidden drop-shadow flex flex-col">
+                                    <img src="{{ $plan->image ? url('/image/planning/' . $plan->list_id) : asset('img/default.jpg') }}" class="w-full h-1/2 object-cover rounded-b"/>
+                                    <div class="p-3 flex flex-col justify-center items-center flex-grow text-center">
+                                        <h1 class="font-semibold text-black">{{ $plan->list_name }}</h1>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         @endforeach
-                    </div>                                  
+                        </div>              
                 </div>
             </div>
         </div>

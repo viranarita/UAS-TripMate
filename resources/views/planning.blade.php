@@ -26,19 +26,22 @@
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Plan Your Trip</h2>
                 <form method="POST" action="{{ url('/planning') }}" enctype="multipart/form-data" onsubmit="return validateForm()">
                     @csrf
-                    <input type="hidden" name="list_id" id="list_id">
+                    <input type="hidden" name="list_id" id="list_id" value="{{ old('list_id', $planToEdit->list_id ?? '') }}">
                     <div class="grid grid-cols-1 gap-8">
                         <div>
                             <label class="block text-gray-700">Itinerary Name</label>
-                            <input type="text" name="list_name" id="list_name" required class="w-full px-3 py-2 border rounded">
+                            <input type="text" name="list_name" id="list_name" class="w-full px-3 py-2 border rounded" required
+                            value="{{ old('list_name', $planToEdit->list_name ?? '') }}">
                         </div>
                         <div>
                             <label class="block text-gray-700">Departure Date</label>
-                            <input type="date" name="departure_date" id="departure_date" required class="w-full px-3 py-2 border rounded">
+                            <input type="date" name="departure_date" id="departure_date" class="w-full px-3 py-2 border rounded" required
+                            value="{{ old('departure_date', $planToEdit->departure_date ?? '') }}">
                         </div>
                         <div>
                             <label class="block text-gray-700">Return Date</label>
-                            <input type="date" name="return_date" id="return_date" required class="w-full px-3 py-2 border rounded">
+                            <input type="date" name="return_date" id="return_date" class="w-full px-3 py-2 border rounded" required
+                            value="{{ old('return_date',$planToEdit->return_date ?? '') }}">
                         </div>
                         <div>
                             <label class="block text-gray-700">Trip Days</label>
@@ -46,39 +49,47 @@
                         </div>
                         <div>
                             <label class="block text-gray-700">Departure City</label>
-                            <select name="departure_city" id="departure_city" required class="w-full px-3 py-2 border rounded">
+                            <select name="departure_city" id="departure_city" class="w-full px-3 py-2 border rounded" required>
                                 <option value="">Pilih Kota</option>
-                                <option value="Surabaya">Surabaya</option>
-                                <option value="Jakarta">Jakarta</option>
-                                <option value="Bandung">Bandung</option>
-                                <option value="Yogyakarta">Yogyakarta</option>
+                                <option value="Surabaya" {{ (old('departure_city', $planToEdit->departure_city ?? '') == 'Surabaya') ? 'selected' : '' }}>Surabaya</option>
+                                <option value="Jakarta" {{ (old('departure_city', $planToEdit->departure_city ?? '') == 'Jakarta') ? 'selected' : '' }}>Jakarta</option>
+                                <option value="Bandung" {{ (old('departure_city', $planToEdit->departure_city ?? '') == 'Bandung') ? 'selected' : '' }}>Bandung</option>
+                                <option value="Yogyakarta" {{ (old('departure_city', $planToEdit->departure_city ?? '') == 'Yogyakarta') ? 'selected' : '' }}>Yogyakarta</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-gray-700">Destination City</label>
                             <select name="destination_city" id="destination_city" required class="w-full px-3 py-2 border rounded">
                                 <option value="">Pilih Kota</option>
-                                <option value="Surabaya">Surabaya</option>
-                                <option value="Jakarta">Jakarta</option>
-                                <option value="Bandung">Bandung</option>
-                                <option value="Yogyakarta">Yogyakarta</option>
+                                <option value="Surabaya" {{ (old('departure_city', $planToEdit->departure_city ?? '') == 'Surabaya') ? 'selected' : '' }}>Surabaya</option>
+                                <option value="Jakarta" {{ (old('departure_city', $planToEdit->departure_city ?? '') == 'Jakarta') ? 'selected' : '' }}>Jakarta</option>
+                                <option value="Bandung" {{ (old('departure_city', $planToEdit->departure_city ?? '') == 'Bandung') ? 'selected' : '' }}>Bandung</option>
+                                <option value="Yogyakarta" {{ (old('departure_city', $planToEdit->departure_city ?? '') == 'Yogyakarta') ? 'selected' : '' }}>Yogyakarta</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-gray-700">Gambar</label>
                             <input type="file" name="image" id="image" accept=".jpg,.jpeg" class="w-full px-3 py-2 border rounded">
-                            <!-- Preview gambar -->
                             <div id="imagePreview" class="mt-2">
-                                <!-- nanti diisi gambar -->
+                                @if(isset($planToEdit) && $planToEdit->image)
+                                    <img src="data:image/jpeg;base64,{{ base64_encode($planToEdit->image) }}" alt="Preview" class="h-32 object-cover mt-2 rounded">
+                                @endif
                             </div>
+                            @if(isset($planToEdit) && $planToEdit->image)
+                                <input type="hidden" name="old_image" value="{{ base64_encode($planToEdit->image) }}">
+                            @endif
                         </div>
+                        
                     </div>
     
                     <div class="mt-4 flex justify-between">
-                        <button type="submit" name="tambah" id="addBtn" class="bg-blue-500 text-white px-4 py-2 rounded">Tambah</button>
-                        <button type="submit" name="update" id="updateBtn" class="bg-green-500 text-white px-4 py-2 rounded hidden">Update</button>
+                        @if(isset($planToEdit))
+                            <button type="submit" name="update" class="bg-green-500 text-white px-4 py-2 rounded">Update</button>
+                        @else
+                            <button type="submit" name="tambah" class="bg-blue-500 text-white px-4 py-2 rounded">Tambah</button>
+                        @endif
                         <button type="button" onclick="resetForm()" class="bg-gray-400 text-white px-4 py-2 rounded">Reset</button>
-                    </div>
+                    </div>                    
                 </form>
             </div>
     
@@ -187,8 +198,36 @@
 
         return true;
     }
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        calculateDays(); // hitung otomatis saat sudah terisi
 
+        @if(isset($planToEdit))
+            document.getElementById("trip_days").value = getDaysDiff(
+                "{{ $planToEdit->departure_date }}",
+                "{{ $planToEdit->return_date }}"
+            );
+        @endif
+    });
+
+    function getDaysDiff(dep, ret) {
+        const d = new Date(dep);
+        const r = new Date(ret);
+        if (!isNaN(d) && !isNaN(r) && r >= d) {
+            return Math.ceil((r - d) / (1000 * 60 * 60 * 24));
+        }
+        return '';
+    }
     </script>
+
+    @if (isset($planToEdit))
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const data = @json($planToEdit);
+            editData(data);
+        });
+    </script>
+    @endif
 
 </body>
 </html>
