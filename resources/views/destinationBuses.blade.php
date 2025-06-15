@@ -73,7 +73,14 @@
                 @foreach($buses as $bus)
                     <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
                         <div class="p-4 flex-grow">
-                            <h3 class="text-lg font-semibold">{{ $bus->bus_name }} ({{ $bus->bus_class }})</h3>
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-lg font-semibold">{{ $bus->bus_name }} ({{ $bus->bus_class }})</h3>
+                                <button class="ml-auto text-gray-400 hover:text-primary transition duration-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M6 2a2 2 0 0 0-2 2v18l8-5.333L20 22V4a2 2 0 0 0-2-2H6z"/>
+                                    </svg>
+                                </button>
+                            </div>
                             <p class="text-sm text-gray-500">Dari {{ $bus->origin }} ke {{ $bus->destination }}</p>
                             <p class="text-sm text-gray-500 mt-1">
                                 Berangkat: {{ \Carbon\Carbon::parse($bus->departure_time)->format('d M Y H:i') }}<br>

@@ -135,10 +135,9 @@ Route::get('/reset-password', [ResetPasswordController::class, 'showForm'])->nam
 Route::post('/reset-password', [ResetPasswordController::class, 'handleReset'])->name('password.update');
 
 use App\Http\Controllers\DestinationAttractionController;
+Route::get('/destination-attraction', [DestinationAttractionController::class, 'index'])->name('destination-attraction.index');
 Route::post('/destination-attraction', [DestinationAttractionController::class, 'search'])->name('destination-attraction.search');
-Route::get('/destination-attraction', function () {
-    return view('destinationAttraction');
-});
+
 
 use App\Http\Controllers\DestinationCulinaryController;
 Route::post('/destination-culinary', [DestinationCulinaryController::class, 'search'])->name('destination-culinary.search');
@@ -175,6 +174,18 @@ Route::post('/destination-package', [DestinationPackageController::class, 'searc
 Route::get('/destination-package', function () {
     return view('destinationPackage');
 });
-// Route::get('/destination-package', function () {
-//     return view('destinationPackage');
-// });
+
+use App\Http\Controllers\ItineraryItemController;
+
+Route::post('/itinerary/hotel/add', [ItineraryItemController::class, 'addHotel']);
+Route::post('/itinerary/attraction/add', [ItineraryItemController::class, 'addAttraction']);
+Route::post('/itinerary/culinary/add', [ItineraryItemController::class, 'addCulinary']);
+Route::post('/itinerary/bus/add', [ItineraryItemController::class, 'addBus']);
+Route::post('/itinerary/train/add', [ItineraryItemController::class, 'addTrain']);
+Route::post('/itinerary/flight/add', [ItineraryItemController::class, 'addFlight']);
+
+Route::get('/planning/select', [PlanningController::class, 'select'])->middleware('auth')->name('planning.select');
+Route::post('/itinerary/attraction/add', [ItineraryItemController::class, 'addAttraction'])->name('itinerary.attraction.add');
+
+use App\Http\Controllers\ItineraryAttractionController;
+Route::post('/itinerary-attractions', [ItineraryAttractionController::class, 'store'])->name('itinerary.attraction.add');

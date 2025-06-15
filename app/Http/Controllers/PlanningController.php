@@ -41,14 +41,19 @@ class PlanningController extends Controller
         // Jika create baru
         if (!$request->filled('list_id')) {
             $data['user_id'] = Auth::id();
-
+        
+            // Tambahkan logika ID baru
+            $last = Planning::orderByDesc('list_id')->first();
+            $newId = $last ? $last->list_id + 1 : 1;
+            $data['list_id'] = $newId;
+        
             // Handle upload image jika ada
             if ($request->hasFile('image')) {
                 $data['image'] = file_get_contents($request->file('image')->getRealPath());
             }
-
-            Planning::create($data);
-        }
+        
+            $planning = Planning::create($data);
+        }        
         // Jika update
         else {
             $planning = Planning::where('list_id', $request->list_id)
@@ -67,7 +72,7 @@ class PlanningController extends Controller
             $planning->update($data);
         }
 
-        return redirect()->route('planning', ['edit' => $request->list_id]);
+        return redirect()->route('planning', ['edit' => $planning->list_id]);
     }
 
 

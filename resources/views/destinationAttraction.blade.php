@@ -59,8 +59,15 @@
                                 No Image
                             </div>
                         @endif
-                        <div class="p-4 flex-grow">
-                            <h3 class="text-lg font-semibold">{{ $attraction->name }}</h3>
+                        <div class="p-4 flex-grow ">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-lg font-semibold truncate">{{ $attraction->name }}</h3>
+                                <button onclick="openSaveModal({{ $attraction->id }})" class="ml-auto text-gray-400 hover:text-primary transition duration-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M6 2a2 2 0 0 0-2 2v18l8-5.333L20 22V4a2 2 0 0 0-2-2H6z"/>
+                                    </svg>
+                                </button>                            
+                            </div>
                             <p class="text-sm text-gray-500">{{ $attraction->location }}</p>
                             <p class="text-primary font-bold mt-2">Rp{{ number_format($attraction->price, 0, ',', '.') }}</p>
                         </div>
@@ -72,8 +79,114 @@
 
     @include('components.footer')
 
+    <!-- Modal Save to Planning -->
+    <div id="saveModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white rounded-xl shadow-lg w-[90%] max-w-md p-6 relative">
+            <button onclick="closeSaveModal()" class="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-xl">
+                &times;
+            </button>
+            <h2 class="text-lg font-bold mb-2">Item berhasil disimpan!</h2>
+            <p class="text-sm text-gray-600 mb-4">Tambahkan item ini ke planning Anda:</p>
+
+            <div id="planningList" class="space-y-3 max-h-60 overflow-y-auto">
+                @foreach ($userPlannings ?? [] as $plan)
+                    <div class="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
+                        onclick="saveToPlan(selectedAttractionId, {{ $plan->list_id }})">
+                        <div class="flex items-center space-x-3">
+                            <div>
+                                <div class="font-semibold">{{ $plan->list_name }}</div>
+                                <div class="text-sm text-gray-500">{{ $plan->departure_city }} → {{ $plan->destination_city }}</div>
+                            </div>
+                        </div>
+                        @if ($plan->image)
+                            <img src="data:image/jpeg;base64,{{ base64_encode($plan->image) }}"
+                                alt="Planning Image"
+                                class="w-12 h-12 object-cover rounded"/>
+                        @else
+                            <div class="w-12 h-12 bg-gray-300 flex items-center justify-center text-xs text-gray-600 rounded">
+                                No Image
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+
+            {{-- <button class="mt-4 w-full bg-primary text-white py-2 rounded-lg" onclick="window.location.href='/planning/create'">
+                + Buat Planning Baru
+            </button> --}}
+        </div>
+    </div>
+    <!-- Modal untuk memilih planning -->
+    <div id="planningModal" class="fixed inset-0 bg-black bg-opacity-50  items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 w-96">
+            <h3 class="text-lg font-semibold mb-4">Simpan ke Planning</h3>
+            <form id="addToPlanningForm" action="{{ route('itinerary.attraction.add') }}" method="POST">
+                @csrf
+                <input type="hidden" name="attraction_id" id="modalAttractionId">
+                <label for="planning_id" class="block text-sm mb-2">Pilih Planning:</label>
+                <select name="planning_id" id="planning_id" class="w-full border rounded px-3 py-2 mb-4" required>
+                    @foreach ($userPlannings as $plan)
+                        <option value="{{ $plan->id }}">{{ $plan->title }}</option>
+                    @endforeach
+                </select>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
     <script src="js/script.js"></script>
 
+    <script>
+        let selectedAttractionId = null;
+    
+        function openSaveModal(attractionId) {
+            selectedAttractionId = attractionId;
+            document.getElementById('saveModal').classList.remove('hidden');
+        }
+    
+        function closeSaveModal() {
+            document.getElementById('saveModal').classList.add('hidden');
+        }
+    
+        function saveToPlan(attractionId, listId) {
+            fetch('/itinerary-attractions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    attraction_id: attractionId,
+                    planning_id: listId
+                })
+            }).then(res => {
+                if (res.ok) {
+                    alert('Item berhasil ditambahkan ke planning!');
+                    closeSaveModal();
+                } else {
+                    alert('Gagal menyimpan item ke planning.');
+                }
+            });
+        }
+    </script>
+
+    <script>
+        function openModal(attractionId) {
+            document.getElementById('modalAttractionId').value = attractionId;
+            document.getElementById('planningModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('planningModal').classList.add('hidden');
+        }
+    </script>
+
+    
 </body>
 </html>
 @endsection
