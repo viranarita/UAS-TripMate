@@ -74,6 +74,41 @@
         <div class="container px-4">
             <h2 class="text-2xl font-bold text-gray-800 mb-4">Rencana Perjalananmu</h2>
     
+            @php
+                $totalPrice = 0;
+            
+                foreach ($hotels as $hotel) {
+                    if ($hotel->is_saved) {
+                        $totalPrice += $hotel->price_per_night;
+                    }
+                }
+            
+                foreach ($attractions as $attraction) {
+                    if ($attraction->is_saved) {
+                        $totalPrice += $attraction->price;
+                    }
+                }
+            
+                foreach ($buses as $bus) {
+                    if ($bus->is_saved) {
+                        $totalPrice += $bus->price;
+                    }
+                }
+            
+                foreach ($flights as $flight) {
+                    if ($flight->is_saved) {
+                        $totalPrice += $flight->price;
+                    }
+                }
+            
+                foreach ($trains as $train) {
+                    if ($train->is_saved) {
+                        $totalPrice += $train->price;
+                    }
+                }
+        
+            @endphp
+        
             {{-- Loop hotel --}}
             @if($hotels->count())
             <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">Hotel</h3>
@@ -253,7 +288,7 @@
             </div>
             @endforeach
             @endif
-                        
+      
             {{-- Loop flight --}}
             @if($flights->count())
             <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">Penerbangan</h3>
@@ -339,10 +374,39 @@
             </div>
             @endforeach
             @endif
-
-
-
         </div>
+
+        @if($totalPrice > 0)
+            <div class="container px-4 mt-8">
+                <div class="bg-white shadow rounded-lg px-6 py-4 flex items-center justify-between">
+                    <div>
+                        <h4 class="text-md font-semibold text-gray-800">Total Harga</h4>
+                        <p class="text-xl text-primary font-bold">
+                            Rp {{ number_format($totalPrice, 0, ',', '.') }}
+                        </p>
+                    </div>
+
+                    @if(session('payment_success'))
+    <span class="bg-green-600 text-white font-medium py-2 px-4 rounded">
+        Lunas
+    </span>
+    @php
+        session()->forget('payment_success');
+    @endphp
+@else
+    <form action="{{ route('payment') }}" method="POST" class="ml-4">
+        @csrf
+        <input type="hidden" name="total_price" value="{{ $totalPrice }}">
+        <button type="submit" class="bg-primary hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition duration-200">
+            Bayar Sekarang
+        </button>
+    </form>
+@endif
+
+                </div>
+            </div>
+        @endif
+
     </section>
         
     @include('components.footer')

@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 Route::get('/', function () {
     return view('index');
-});
+})->name('index');
 
 Route::get('/destination', function () {
     return view('destination');
@@ -18,43 +19,6 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 });
-
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// });
-
-// // Route::get('/users', function () {
-// //     return view('users');
-// // });
-
-// Route::get('/attraction', function () {
-//     return view('attraction');
-// });
-
-// Route::get('/culinary', function () {
-//     return view('culinary');
-// });
-
-// Route::get('/hotel', function () {
-//     return view('hotel');
-// });
-
-// Route::get('/buses', function () {
-//     return view('buses');
-// });
-
-// Route::get('/flights', function () {
-//     return view('flights');
-// });
-
-// Route::get('/trains', function () {
-//     return view('trains');
-// });
-
-// Route::get('/packages', function () {
-//     return view('packages');
-// });
 
 use App\Http\Controllers\AttractionController;
 Route::get('/attraction', [AttractionController::class, 'index']);
@@ -120,6 +84,8 @@ Route::middleware('auth')->group(function () {
 });
 Route::get('/cardplanning', [PlanningController::class, 'cardPlanning'])->name('cardplanning');
 Route::get('/image/planning/{id}', [App\Http\Controllers\PlanningController::class, 'showImage']);
+Route::post('/planning/{id}', [PlanningController::class, 'store'])->name('planning.store');
+
 
 use App\Http\Controllers\DashboardController;
 Route::get('/dashboard', [DashboardController::class, 'index']);
@@ -204,3 +170,15 @@ use App\Http\Controllers\ItineraryTrainsController;
 Route::post('/itinerary-trains', [ItineraryTrainsController::class, 'store'])->name('itinerary-trains');
 
 Route::post('/plan/toggle-save/{type}/{id}', [PlanningController::class, 'toggleSave'])->name('plan.toggleSave');
+
+Route::match(['get', 'post'], '/payment', function (Request $request) {
+    if ($request->isMethod('post')) {
+        session(['payment_success' => true]);
+        session(['total_price' => $request->total_price]);
+
+        return redirect()->route('payment');
+    }
+
+    $totalPrice = session('total_price', 0);
+    return view('payment', compact('totalPrice'));
+})->name('payment');
