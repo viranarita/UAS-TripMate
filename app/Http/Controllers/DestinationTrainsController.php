@@ -4,9 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Trains;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Planning;
 
 class DestinationTrainsController extends Controller
 {
+    public function index()
+    {
+        $trains = collect(); // hasil pencarian kosong saat awal
+        $origin = '';
+        $destination = '';
+        $departureDate = '';
+        $trainType = '';
+
+        $userPlannings = Auth::check()
+            ? Planning::where('user_id', Auth::id())->get()
+            : collect();
+
+        return view('destinationTrains', compact('trains', 'origin', 'destination', 'departureDate', 'trainType', 'userPlannings'));
+    }
+
     public function search(Request $request)
     {
         $request->validate([
@@ -31,6 +48,10 @@ class DestinationTrainsController extends Controller
 
         $trains = $query->get();
 
-        return view('destinationTrains', compact('trains', 'origin', 'destination', 'departureDate', 'trainType'));
+        $userPlannings = Auth::check()
+            ? Planning::where('user_id', Auth::id())->get()
+            : collect();
+
+        return view('destinationTrains', compact('trains', 'origin', 'destination', 'departureDate', 'trainType', 'userPlannings'));
     }
 }

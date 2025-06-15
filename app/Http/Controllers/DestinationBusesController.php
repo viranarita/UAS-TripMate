@@ -4,9 +4,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Buses;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Planning;
 
 class DestinationBusesController extends Controller
 {
+    public function index()
+    {
+        $buses = collect(); // kosongkan hasil pencarian saat awal
+        $origin = '';
+        $destination = '';
+        $departureDate = '';
+        $busClass = '';
+        $userPlannings = Auth::check()
+            ? Planning::where('user_id', Auth::id())->get()
+            : collect();
+
+        return view('destinationBuses', compact('buses', 'origin', 'destination', 'departureDate', 'busClass', 'userPlannings'));
+    }
+
     public function search(Request $request)
     {
         $request->validate([
@@ -31,7 +47,10 @@ class DestinationBusesController extends Controller
 
         $buses = $query->get();
 
-        return view('destinationBuses', compact('buses', 'origin', 'destination', 'departureDate', 'busClass'));
-    }
+        $userPlannings = Auth::check()
+            ? Planning::where('user_id', Auth::id())->get()
+            : collect();
 
+        return view('destinationBuses', compact('buses', 'origin', 'destination', 'departureDate', 'busClass', 'userPlannings'));
+    }
 }

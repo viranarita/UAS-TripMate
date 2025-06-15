@@ -34,7 +34,7 @@ class FlightsController extends Controller
         $newFlightId = 'FLT' . str_pad($nextIdNumber, 3, '0', STR_PAD_LEFT);
 
         Flights::create([
-            'flight_id' => $newFlightId, // <-- WAJIB ditambahkan
+            'flight_id' => $newFlightId,
             'airline' => $request->airline,
             'departure_time' => $request->departure_time,
             'arrival_time' => $request->arrival_time,
@@ -42,7 +42,6 @@ class FlightsController extends Controller
             'destination' => $request->destination,
             'price' => $request->price,
         ]);
-
 
         return redirect()->back()->with('success', 'Flight berhasil ditambahkan');
     }
@@ -58,7 +57,7 @@ class FlightsController extends Controller
             'price' => 'required|numeric|min:0',
         ]);
 
-        $flight = Flights::find($id);
+        $flight = Flights::where('flight_id', $id)->first();
 
         if (!$flight) {
             return redirect()->back()->with('error', 'Flight tidak ditemukan');
@@ -78,7 +77,7 @@ class FlightsController extends Controller
 
     public function destroy($id)
     {
-        $flight = Flights::find($id);
+        $flight = Flights::where('flight_id', $id)->first();
 
         if ($flight) {
             $flight->delete();

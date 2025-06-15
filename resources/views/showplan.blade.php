@@ -116,8 +116,6 @@
             @endforeach
             @endif
 
-
-
             {{-- Loop kuliner --}}
             @if($culinaries->count())
                 <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">Kuliner</h3>
@@ -168,7 +166,6 @@
                 @endforeach
             @endif
 
-        
             {{-- Loop atraksi wisata --}}
             @if($attractions->count())
             <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">Atraksi Wisata</h3>
@@ -210,6 +207,139 @@
             </div>
             @endforeach
             @endif
+
+            {{-- Loop bus --}}
+            @if($buses->count())
+            <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">Bus</h3>
+            @foreach($buses as $bus)
+            <div class="relative bg-white shadow rounded-lg mb-4 p-4">
+                {{-- Tombol bookmark --}}
+                <form action="{{ route('plan.toggleSave', ['type' => 'bus', 'id' => $bus->bus_id]) }}" method="POST" class="absolute top-2 right-2 z-10">
+                    @csrf
+                    <button type="submit" title="Simpan ke Planning" class="p-1 rounded-full transition duration-200">
+                        @if($bus->is_saved)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M6 2a2 2 0 0 0-2 2v18l8-5.333L20 22V4a2 2 0 0 0-2-2H6z"/>
+                            </svg>
+                        @else
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 hover:text-primary transition duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M6 2a2 2 0 0 0-2 2v18l8-5.333L20 22V4a2 2 0 0 0-2-2H6z"/>
+                            </svg>
+                        @endif
+                    </button>
+                </form>
+
+                {{-- Informasi bus --}}
+                <div>
+                    <h4 class="font-semibold text-lg text-gray-800">
+                        {{ $bus->bus_name }}
+                        <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded ml-2 align-middle">
+                            {{ $bus->bus_class }}
+                        </span>
+                    </h4>
+                    <p class="text-sm text-gray-600 mt-1">
+                        {{ $bus->origin }} → {{ $bus->destination }}
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        Berangkat: {{ \Carbon\Carbon::parse($bus->departure_time)->format('d M Y, H:i') }}
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        Tiba: {{ \Carbon\Carbon::parse($bus->arrival_time)->format('d M Y, H:i') }}
+                    </p>
+                    <p class="text-primary font-bold mt-2">
+                        Rp {{ number_format($bus->price, 0, ',', '.') }}
+                    </p>
+                </div>
+            </div>
+            @endforeach
+            @endif
+                        
+            {{-- Loop flight --}}
+            @if($flights->count())
+            <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">Penerbangan</h3>
+            @foreach($flights as $flight)
+            <div class="relative bg-white shadow rounded-lg mb-4 p-4">
+                {{-- Tombol bookmark --}}
+                <form action="{{ route('plan.toggleSave', ['type' => 'flight', 'id' => $flight->flight_id]) }}" method="POST" class="absolute top-2 right-2 z-10">
+                    @csrf
+                    <button type="submit" title="Simpan ke Planning" class="p-1 rounded-full transition duration-200">
+                        @if($flight->is_saved)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M6 2a2 2 0 0 0-2 2v18l8-5.333L20 22V4a2 2 0 0 0-2-2H6z"/>
+                            </svg>
+                        @else
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 hover:text-primary transition duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M6 2a2 2 0 0 0-2 2v18l8-5.333L20 22V4a2 2 0 0 0-2-2H6z"/>
+                            </svg>
+                        @endif
+                    </button>
+                </form>
+
+                {{-- Informasi penerbangan --}}
+                <div>
+                    <h4 class="font-semibold text-lg text-gray-800">
+                        {{ $flight->airline }}
+                    </h4>
+                    <p class="text-sm text-gray-600 mt-1">
+                        {{ $flight->origin }} → {{ $flight->destination }}
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        Berangkat: {{ \Carbon\Carbon::parse($flight->departure_time)->format('d M Y, H:i') }}
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        Tiba: {{ \Carbon\Carbon::parse($flight->arrival_time)->format('d M Y, H:i') }}
+                    </p>
+                    <p class="text-primary font-bold mt-2">
+                        Rp {{ number_format($flight->price, 0, ',', '.') }}
+                    </p>
+                </div>
+            </div>
+            @endforeach
+            @endif
+
+            {{-- Loop trains --}}
+            @if($trains->count())
+            <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">Kereta</h3>
+            @foreach($trains as $train)
+            <div class="relative bg-white shadow rounded-lg mb-4 p-4">
+                {{-- Tombol bookmark --}}
+                <form action="{{ route('plan.toggleSave', ['type' => 'train', 'id' => $train->train_id]) }}" method="POST" class="absolute top-2 right-2 z-10">
+                    @csrf
+                    <button type="submit" title="Simpan ke Planning" class="p-1 rounded-full transition duration-200">
+                        @if($train->is_saved)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M6 2a2 2 0 0 0-2 2v18l8-5.333L20 22V4a2 2 0 0 0-2-2H6z"/>
+                            </svg>
+                        @else
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 hover:text-primary transition duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M6 2a2 2 0 0 0-2 2v18l8-5.333L20 22V4a2 2 0 0 0-2-2H6z"/>
+                            </svg>
+                        @endif
+                    </button>
+                </form>
+
+                {{-- Informasi kereta --}}
+                <div>
+                    <h4 class="font-semibold text-lg text-gray-800">
+                        {{ $train->train_name }} ({{ $train->train_type }})
+                    </h4>
+                    <p class="text-sm text-gray-600 mt-1">
+                        {{ $train->origin }} → {{ $train->destination }}
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        Berangkat: {{ \Carbon\Carbon::parse($train->departure_time)->format('d M Y, H:i') }}
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        Tiba: {{ \Carbon\Carbon::parse($train->arrival_time)->format('d M Y, H:i') }}
+                    </p>
+                    <p class="text-primary font-bold mt-2">
+                        Rp {{ number_format($train->price, 0, ',', '.') }}
+                    </p>
+                </div>
+            </div>
+            @endforeach
+            @endif
+
 
 
         </div>

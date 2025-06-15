@@ -142,7 +142,25 @@ class PlanningController extends Controller
             ->select('a.*', DB::raw('true as is_saved'))
             ->get();
 
-        return view('showplan', compact('plan', 'hotels', 'culinaries', 'attractions'));
+        $buses = DB::table('tb_Itinerary_Buses as ib')
+            ->join('tb_Buses as b', 'ib.bus_id', '=', 'b.bus_id')
+            ->where('ib.list_id', $id)
+            ->select('b.*', DB::raw('true as is_saved'))
+            ->get();
+        
+        $flights = DB::table('tb_Itinerary_Flights as ifl')
+            ->join('tb_Flights as f', 'ifl.flight_id', '=', 'f.flight_id')
+            ->where('ifl.list_id', $id)
+            ->select('f.*', DB::raw('true as is_saved'))
+            ->get();
+
+        $trains = DB::table('tb_Itinerary_Trains as it')
+            ->join('tb_Trains as t', 'it.train_id', '=', 't.train_id')
+            ->where('it.list_id', $id)
+            ->select('t.*', DB::raw('true as is_saved'))
+            ->get();        
+        
+        return view('showplan', compact('plan', 'hotels', 'culinaries', 'attractions', 'buses', 'flights', 'trains'));
     }
     public function destroy($list_id)
     {
@@ -229,7 +247,70 @@ class PlanningController extends Controller
                     ]);
                 }
                 break;
-            
+
+            case 'bus':
+                $exists = DB::table('tb_Itinerary_Buses')
+                        ->where('bus_id', $id)
+                        ->where('list_id', $planId)
+                        ->exists();
+                
+                    if ($exists) {
+                        DB::table('tb_Itinerary_Buses')
+                            ->where('bus_id', $id)
+                            ->where('list_id', $planId)
+                            ->delete();
+                    } else {
+                        DB::table('tb_Itinerary_Buses')->insert([
+                            'bus_id' => $id,
+                            'list_id' => $planId,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ]);
+                    }
+                        break;
+            case 'flight':
+                $exists = DB::table('tb_Itinerary_Flights')
+                    ->where('flight_id', $id)
+                    ->where('list_id', $planId)
+                    ->exists();
+                        
+                if ($exists) {
+                    DB::table('tb_Itinerary_Flights')
+                    ->where('flight_id', $id)
+                    ->where('list_id', $planId)
+                    ->delete();
+                        } else {
+                            DB::table('tb_Itinerary_Flights')->insert([
+                            'flight_id' => $id,
+                            'list_id' => $planId,
+                            'created_at' => now(),
+                                'updated_at' => now()
+                            ]);
+                        }
+                    break;
+        
+            case 'train':
+                $exists = DB::table('tb_Itinerary_Trains')
+                    ->where('train_id', $id)
+                    ->where('list_id', $planId)
+                    ->exists();
+                    
+                    if ($exists) {
+                    DB::table('tb_Itinerary_Trains')
+                        ->where('train_id', $id)
+                        ->where('list_id', $planId)
+                        ->delete();
+                } else {
+                        DB::table('tb_Itinerary_Trains')->insert([
+                        'train_id' => $id,
+                        'list_id' => $planId,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+                break;
+                    
+                            
         }
 
         return back();

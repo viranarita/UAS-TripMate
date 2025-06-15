@@ -194,4 +194,13 @@ Route::post('/itinerary-culinaries', [ItineraryCulinaryController::class, 'store
 use App\Http\Controllers\ItineraryHotelController;
 Route::post('/itinerary-hotels', [ItineraryHotelController::class, 'store'])->name('itinerary-hotels');
 
+use App\Http\Controllers\ItineraryBusesController;
+Route::post('/itinerary-buses', [ItineraryBusesController::class, 'store'])->name('itinerary-buses');
+
+use App\Http\Controllers\ItineraryFlightsController;
+Route::post('/itinerary-flights', [ItineraryFlightsController::class, 'store'])->name('itinerary-flights');
+
+use App\Http\Controllers\ItineraryTrainsController;
+Route::post('/itinerary-trains', [ItineraryTrainsController::class, 'store'])->name('itinerary-trains');
+
 Route::post('/plan/toggle-save/{type}/{id}', [PlanningController::class, 'toggleSave'])->name('plan.toggleSave');
