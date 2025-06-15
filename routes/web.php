@@ -141,9 +141,7 @@ Route::post('/destination-attraction', [DestinationAttractionController::class, 
 
 use App\Http\Controllers\DestinationCulinaryController;
 Route::post('/destination-culinary', [DestinationCulinaryController::class, 'search'])->name('destination-culinary.search');
-Route::get('/destination-culinary', function () {
-    return view('destinationCulinary');
-});
+Route::get('/destination-culinary', [DestinationCulinaryController::class, 'index'])->name('destination-culinary.index');
 
 use App\Http\Controllers\DestinationHotelsController;
 Route::post('/destination-hotel', [DestinationHotelsController::class, 'search'])->name('destination-hotel.search');
@@ -188,4 +186,12 @@ Route::get('/planning/select', [PlanningController::class, 'select'])->middlewar
 Route::post('/itinerary/attraction/add', [ItineraryItemController::class, 'addAttraction'])->name('itinerary.attraction.add');
 
 use App\Http\Controllers\ItineraryAttractionController;
-Route::post('/itinerary-attractions', [ItineraryAttractionController::class, 'store'])->name('itinerary.attraction.add');
+Route::post('/itinerary-attractions', [ItineraryAttractionController::class, 'store'])->name('itinerary.attraction');
+
+use App\Http\Controllers\ItineraryCulinaryController;
+Route::post('/itinerary-culinaries', [ItineraryCulinaryController::class, 'store'])->name(name: 'itinerary.culinary');
+
+use App\Http\Controllers\ItineraryHotelController;
+Route::post('/itinerary-hotels', [ItineraryHotelController::class, 'store'])->name('itinerary-hotels');
+
+Route::post('/plan/toggle-save/{type}/{id}', [PlanningController::class, 'toggleSave'])->name('plan.toggleSave');

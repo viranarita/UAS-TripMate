@@ -80,15 +80,18 @@
                     <div class="p-4 flex-grow">
                         <div class="flex justify-between items-start">
                             <h3 class="text-lg font-semibold">{{ $item->name }}</h3>
-                            <button class="ml-auto text-gray-400 hover:text-primary transition duration-200">
+                            <button onclick="openSaveModal('{{ $item->culinary_id }}')"
+                                class="ml-auto text-gray-400 hover:text-primary transition duration-200"
+                                title="Simpan ke Planning">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M6 2a2 2 0 0 0-2 2v18l8-5.333L20 22V4a2 2 0 0 0-2-2H6z"/>
                                 </svg>
-                            </button>
+                            </button>                          
                         </div>
                         
                         <p class="text-sm text-gray-500">{{ $item->location }}</p>
                         <p class="font-bold mt-2">{!! $symbolDisplay !!}</p>
+                        
                     </div>
                 </div>                
             @endforeach        
@@ -96,9 +99,101 @@
         </div>        
     </section>
 
+    <!-- Modal Save to Planning -->
+    <div id="saveModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 items-center justify-center">
+        <div class="bg-white rounded-xl shadow-lg w-[90%] max-w-md p-6 relative">
+            <button onclick="closeSaveModal()" class="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-xl">
+                &times;
+            </button>
+            <h2 class="text-lg font-bold mb-2">Item berhasil disimpan!</h2>
+            <p class="text-sm text-gray-600 mb-4">Tambahkan item ini ke planning Anda:</p>
+
+            <div id="planningList" class="space-y-3 max-h-60 overflow-y-auto">
+                @foreach ($userPlannings ?? [] as $plan)
+                <div class="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer planning-option" data-list-id="{{ $plan->list_id }}">
+                        <div class="flex items-center space-x-3">
+                            <div>
+                                <div class="font-semibold">{{ $plan->list_name }}</div>
+                                <div class="text-sm text-gray-500">{{ $plan->departure_city }} → {{ $plan->destination_city }}</div>
+                            </div>
+                        </div>
+                        @if ($plan->image)
+                            @if (!empty($plan->image))
+                            <img src="data:image/jpeg;base64,{{ base64_encode($plan->image) }}"
+                                alt="Planning Image"
+                                class="w-12 h-12 object-cover rounded"/>
+                        @else
+                            <div class="w-12 h-12 bg-gray-300 flex items-center justify-center text-xs text-gray-600 rounded">
+                                No Image
+                            </div>
+                        @endif
+                                
+                        @else
+                            <div class="w-12 h-12 bg-gray-300 flex items-center justify-center text-xs text-gray-600 rounded">
+                                No Image
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+
     @include('components.footer')
 
     <script src="js/script.js"></script>
+    <script>
+        let selectedCulinaryId = null;
+    
+        function openSaveModal(culinaryId) {
+            selectedCulinaryId = culinaryId;
+            const modal = document.getElementById('saveModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeSaveModal() {
+            const modal = document.getElementById('saveModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+    
+        function saveToPlan(culinaryId, listId) {
+            fetch('/itinerary-culinaries', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    culinary_id: culinaryId,
+                    list_id: listId
+                })
+            }).then(res => {
+                if (res.ok) {
+                    alert('Item berhasil ditambahkan ke planning!');
+                    closeSaveModal();
+                } else {
+                    alert('Gagal menyimpan item ke planning.');
+                }
+            });
+        }
+    
+        // Pasang event listener ke semua pilihan planning
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.planning-option').forEach(el => {
+                el.addEventListener('click', () => {
+                    const listId = el.getAttribute('data-list-id');
+                    if (selectedCulinaryId && listId) {
+                        saveToPlan(selectedCulinaryId, listId);
+                    }
+                });
+            });
+        });
+    </script>
+    
+    
 </body>
 </html>
 @endsection

@@ -9,6 +9,7 @@ class ItineraryItemController extends Controller
 {
     public function addHotel(Request $request)
     {
+        
         DB::table('itinerary_hotels')->insert([
             'list_id' => $request->list_id,
             'hotel_id' => $request->hotel_id,

@@ -25,4 +25,10 @@ class Planning extends Model
     {
         return $this->belongsTo(Users::class, 'user_id');
     }
+
+    public function culinaries()
+    {
+        return $this->belongsToMany(Culinary::class, 'tb_Itinerary_Culinary', 'list_id', 'culinary_id');
+    }
+
 }

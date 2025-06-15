@@ -21,4 +21,10 @@ class Culinary extends Model
         'price_range',
         'image_url',
     ];
+
+    public function itineraries()
+    {
+        return $this->belongsToMany(Planning::class, 'tb_Itinerary_Culinary', 'culinary_id', 'list_id');
+    }
+
 }
