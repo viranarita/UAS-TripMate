@@ -11,7 +11,7 @@ class ItineraryAttractionController extends Controller
     {
         $request->validate([
             'attraction_id' => 'required|string|max:11',
-            'list_id' => 'required|integer',
+            'list_id' => 'required|string|max:11',
         ]);
 
         $exists = DB::table('tb_Itinerary_Attractions')

@@ -9,8 +9,12 @@ class Planning extends Model
     protected $table = 'tb_Itinerary';
     protected $primaryKey = 'list_id';
     public $timestamps = false;
+    public $incrementing = false;
+    protected $keyType = 'string';
+
 
     protected $fillable = [
+        'list_id',
         'user_id',
         'list_name',
         'departure_date',

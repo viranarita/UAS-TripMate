@@ -26,7 +26,9 @@
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Plan Your Trip</h2>
                 <form method="POST" action="{{ url('/planning') }}" enctype="multipart/form-data" onsubmit="return validateForm()">
                     @csrf
-                    <input type="hidden" name="list_id" id="list_id" value="{{ old('list_id', $planToEdit->list_id ?? '') }}">
+                    @if (isset($planToEdit))
+                        <input type="hidden" name="list_id" id="list_id" value="{{ old('list_id', $planToEdit->list_id) }}">
+                    @endif
                     <div class="grid grid-cols-1 gap-8">
                         <div>
                             <label class="block text-gray-700">Itinerary Name</label>
@@ -134,7 +136,9 @@
     
     <script>
     function editData(data) {
-        document.getElementById("list_id").value = data.list_id;
+        @if (isset($planToEdit))
+            document.getElementById("list_id").value = "{{ $planToEdit->list_id }}";
+        @endif
         document.getElementById("list_name").value = data.list_name;
         document.getElementById("departure_date").value = data.departure_date;
         document.getElementById("return_date").value = data.return_date;

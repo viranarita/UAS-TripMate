@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Planning;
-use App\Models\Culinary;
 use Illuminate\Support\Facades\DB;
 
 
@@ -24,11 +23,7 @@ class PlanningController extends Controller
     }
 
     public function store(Request $request)
-{
-    if (!Auth::check()) {
-        return redirect()->route('login');
-    }
-
+    {
         $request->validate([
             'list_name' => 'required|string|max:150',
             'departure_date' => 'required|date',
@@ -40,23 +35,29 @@ class PlanningController extends Controller
 
         $data = $request->only('list_name', 'departure_date', 'return_date', 'departure_city', 'destination_city');
 
-        // Jika create baru
+        $data['list_id'] = $request->input('list_id');
+
+        // Upload gambar jika ada
+        if ($request->hasFile('image')) {
+            $data['image'] = file_get_contents($request->file('image')->getRealPath());
+        }
+
+        // Create
         if (!$request->filled('list_id')) {
-            $data['user_id'] = Auth::id();
-        
-            // Tambahkan logika ID baru
             $last = Planning::orderByDesc('list_id')->first();
-            $newId = $last ? $last->list_id + 1 : 1;
-            $data['list_id'] = $newId;
-        
-            // Handle upload image jika ada
-            if ($request->hasFile('image')) {
-                $data['image'] = file_get_contents($request->file('image')->getRealPath());
+            if ($last) {
+                $lastIdNumber = (int) substr($last->list_id, 4); // Ambil angka dari plan001 -> 1
+                $newIdNumber = $lastIdNumber + 1;
+            } else {
+                $newIdNumber = 1;
             }
-        
-            $planning = Planning::create($data);
-        }        
-        // Jika update
+            $data['list_id'] = 'PLAN' . str_pad($newIdNumber, 3, '0', STR_PAD_LEFT); // jadi plan001, plan002, dst
+
+            $data['user_id'] = Auth::id();
+
+            Planning::create($data);
+        } 
+        // Update
         else {
             $planning = Planning::where('list_id', $request->list_id)
                 ->where('user_id', Auth::id())
@@ -68,13 +69,13 @@ class PlanningController extends Controller
             } elseif ($request->filled('old_image')) {
                 $data['image'] = base64_decode($request->input('old_image'));
             } else {
-                $data['image'] = $planning->image; // fallback terakhir
+                unset($data['image']); // pakai image lama
             }
 
             $planning->update($data);
         }
 
-        return redirect()->route('planning', ['edit' => $planning->list_id]);
+        return redirect()->route('planning', ['edit' => $data['list_id']]);
     }
 
     public function delete($id)

@@ -11,7 +11,7 @@ class ItineraryHotelController extends Controller
     {
         $request->validate([
             'hotel_id' => 'required|string|max:11',
-            'list_id' => 'required|integer',
+            'list_id' => 'required|string|max:11',
         ]);
 
         // Cek apakah data sudah ada

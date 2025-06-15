@@ -11,7 +11,7 @@ class ItineraryCulinaryController extends Controller
     {
         $request->validate([
             'culinary_id' => 'required|string|max:11',
-            'list_id' => 'required|integer',
+            'list_id' => 'required|string|max:11',
         ]);
 
         // Cek apakah kombinasi culinary_id dan list_id sudah ada
