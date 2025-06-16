@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 Route::get('/', function () {
     return view('index');
@@ -194,3 +195,17 @@ Route::match(['get', 'post'], '/payment', function (Request $request) {
     $listId = $request->query('list_id');
     return view('payment', compact('totalPrice', 'listId'));
 })->name('payment');
+
+Route::get('/chart-data', function () {
+    $results = DB::table('tb_Attractions')
+        ->select('location', DB::raw('COUNT(*) as count'))
+        ->groupBy('location')
+        ->orderByDesc('count')
+        ->limit(5)
+        ->get();
+
+    return response()->json([
+        'labels' => $results->pluck('location'),
+        'data' => $results->pluck('count')
+    ]);
+});

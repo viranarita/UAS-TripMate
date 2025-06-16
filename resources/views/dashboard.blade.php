@@ -155,39 +155,51 @@
     <script>
         // Chart 1 Destinasi Favorit
         document.addEventListener("DOMContentLoaded", function() {
-              fetch("/chart-data")
-                  .then(response => response.json())
-                  .then(data => {
-                      var ctx = document.getElementById("myChart1").getContext('2d');
-      
-                      var myChart = new Chart(ctx, {
-                          type: 'doughnut',
-                          data: {
-                              labels: data.labels,
-                              datasets: [{
-                                  label: 'Destinasi Favorit',
-                                  data: data.data,
-                                  backgroundColor: [
-                                      'rgba(255, 99, 132, 0.7)',
-                                      'rgba(54, 162, 235, 0.7)',
-                                      'rgba(255, 206, 86, 0.7)',
-                                      'rgba(75, 192, 192, 0.7)',
-                                      'rgba(153, 102, 255, 0.7)'
-                                  ],
-                                  borderColor: [
-                                      'rgba(255, 99, 132, 1)',
-                                      'rgba(54, 162, 235, 1)',
-                                      'rgba(255, 206, 86, 1)',
-                                      'rgba(75, 192, 192, 1)',
-                                      'rgba(153, 102, 255, 1)'
-                                  ],
-                                  borderWidth: 2
-                              }]
-                          }
-                      });
-                  })
-                  .catch(error => console.error('Error:', error));
-          });
+        fetch("{{ url('/chart-data') }}")
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById("myChart1").getContext('2d');
+
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Destinasi Favorit',
+                            data: data.data,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.7)',
+                                'rgba(54, 162, 235, 0.7)',
+                                'rgba(255, 206, 86, 0.7)',
+                                'rgba(75, 192, 192, 0.7)',
+                                'rgba(153, 102, 255, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)'
+                            ],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Destinasi Favorit'
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching chart data:', error));
+    });
       
         // Chart 2 Itinerary Perbulan
         document.addEventListener("DOMContentLoaded", function () {
