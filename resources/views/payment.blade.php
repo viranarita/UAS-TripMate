@@ -30,10 +30,11 @@
             <form action="{{ route('payment') }}" method="POST">
                 @csrf
                 <input type="hidden" name="total_price" value="{{ $totalPrice ?? 0 }}">
+                <input type="hidden" name="list_id" value="{{ $listId }}">
                 <button type="submit" class="w-full bg-primary text-white py-2 rounded-lg font-semibold hover:bg-red-700 transition">
                     Konfirmasi Pembayaran
                 </button>
-            </form>
+            </form>            
         @endif
 
     </div>

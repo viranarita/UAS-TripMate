@@ -386,22 +386,20 @@
                         </p>
                     </div>
 
-                    @if(session('payment_success'))
-    <span class="bg-green-600 text-white font-medium py-2 px-4 rounded">
-        Lunas
-    </span>
-    @php
-        session()->forget('payment_success');
-    @endphp
-@else
-    <form action="{{ route('payment') }}" method="POST" class="ml-4">
-        @csrf
-        <input type="hidden" name="total_price" value="{{ $totalPrice }}">
-        <button type="submit" class="bg-primary hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition duration-200">
-            Bayar Sekarang
-        </button>
-    </form>
-@endif
+                    @if($plan->is_paid)
+                        <span class="bg-green-600 text-white font-medium py-2 px-4 rounded">
+                            Lunas
+                        </span>
+                    @else
+                        <form action="{{ route('payment') }}" method="POST" class="ml-4">
+                            @csrf
+                            <input type="hidden" name="total_price" value="{{ $totalPrice }}">
+                            <input type="hidden" name="list_id" value="{{ $plan->list_id }}">
+                            <button type="submit" class="bg-primary hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition duration-200">
+                                Bayar Sekarang
+                            </button>
+                        </form>
+                    @endif
 
                 </div>
             </div>

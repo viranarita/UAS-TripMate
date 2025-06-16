@@ -171,14 +171,26 @@ Route::post('/itinerary-trains', [ItineraryTrainsController::class, 'store'])->n
 
 Route::post('/plan/toggle-save/{type}/{id}', [PlanningController::class, 'toggleSave'])->name('plan.toggleSave');
 
+use App\Models\Planning;
 Route::match(['get', 'post'], '/payment', function (Request $request) {
     if ($request->isMethod('post')) {
-        session(['payment_success' => true]);
-        session(['total_price' => $request->total_price]);
+        // Simpan status pembayaran ke DB
+        $listId = $request->input('list_id');
+        $totalPrice = $request->input('total_price');
 
-        return redirect()->route('payment');
+        $planning = Planning::find($listId);
+        if ($planning) {
+            $planning->is_paid = true;
+            $planning->save();
+
+            session(['payment_success' => true]);
+            session(['total_price' => $totalPrice]);
+        }
+
+        return redirect()->route('payment', ['list_id' => $listId]);
     }
 
     $totalPrice = session('total_price', 0);
-    return view('payment', compact('totalPrice'));
+    $listId = $request->query('list_id');
+    return view('payment', compact('totalPrice', 'listId'));
 })->name('payment');
